@@ -1,4 +1,3 @@
-from PoetsSpider import PoetsSpider
 import pandas as pd
 import re
 
