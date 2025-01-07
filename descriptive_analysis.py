@@ -124,28 +124,6 @@ class Descriptive_analysis:
         self.data_df = df
         #df.to_csv(self.legal_path,index=False,encoding='utf-8')
         return df
-    def analyze_poets(self):
-        df = self.legal_data()
-        poets_df = df['poets'].value_counts().to_frame()
-        poets_df.reset_index(inplace=True)
-        poets_df.columns = ['poets', 'count']
-        poets_df['percentage'] = poets_df['count']/poets_df['count'].sum() * 100
-        spider = PoetsSpider()
-        #results = spider.save_to_csv(poets_df['poets'])
-        results = pd.read_csv('data/poets_info.csv', encoding='utf-8')
-        poets_df['birth_year'] = -1
-        poets_df['death_year'] = -1
-
-        for i, poet in enumerate(poets_df['poets']):
-            period_info = results[results['name'] == poet]['dynasty'].values[0] if len(results[results['name'] == poet]) > 0 else ''
-            birth_year, death_year = self.extract_years(period_info)
-            poets_df.loc[i, 'birth_year'] = birth_year
-            poets_df.loc[i, 'death_year'] = death_year
-        
-        self.poets_df = poets_df
-        poets_df.to_csv(self.poets_info_path, encoding='utf-8')
-        print('成功保存诗人信息')
-        return poets_df
     #添加时期信息
     def add_period(self):
         poets_df = pd.read_csv(self.poets_info_path)
@@ -324,8 +302,6 @@ class Descriptive_analysis:
 
 if __name__ == "__main__":
     des = Descriptive_analysis()
-    # 诗人分析
-    poets_df = des.analyze_poets()
     print("诗人统计结果：")
     print(poets_df[['poets', 'birth_year', 'death_year']])
     
